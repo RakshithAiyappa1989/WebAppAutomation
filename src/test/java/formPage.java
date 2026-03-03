@@ -28,6 +28,5 @@ public class formPage extends BaseTest {
         webDriverUtility.selectCheckbox(driver,"Java");
         Thread.sleep(5000);
         System.out.println("First test case completed");
-
     }
 }
