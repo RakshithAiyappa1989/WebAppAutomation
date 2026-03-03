@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Selenium Practice Hub</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --surface: #12121a;
+      --surface2: #1c1c2e;
+      --accent: #00e5ff;
+      --accent2: #ff4081;
+      --accent3: #76ff03;
+      --text: #e8e8f0;
+      --muted: #6b6b8a;
+      --border: #2a2a3e;
+      --radius: 4px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Syne', sans-serif;
+      min-height: 100vh;
+    }
+
+    /* NAV */
+    nav {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      height: 56px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    nav .logo {
+      font-family: 'Space Mono', monospace;
+      font-size: 1rem;
+      color: var(--accent);
+      font-weight: 700;
+      letter-spacing: 2px;
+    }
+    nav a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    nav a:hover { color: var(--accent); }
+    nav .nav-right { margin-left: auto; display: flex; gap: 1rem; align-items: center; }
+
+    /* HERO */
+    .hero {
+      padding: 4rem 2rem 2rem;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+    }
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 800;
+      line-height: 1.1;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero p {
+      margin-top: 1rem;
+      color: var(--muted);
+      font-family: 'Space Mono', monospace;
+      font-size: 0.85rem;
+    }
+
+    /* TABS */
+    .tabs {
+      display: flex;
+      gap: 0;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      overflow-x: auto;
+      padding: 0 2rem;
+    }
+    .tab-btn {
+      padding: 1rem 1.5rem;
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-family: 'Space Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+    .tab-btn:hover { color: var(--text); }
+    .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+    /* CONTENT */
+    .content { padding: 2rem; max-width: 900px; margin: 0 auto; }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* SECTION */
+    .section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .section-title {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .section-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* FORM ELEMENTS */
+    label {
+      display: block;
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 0.4rem;
+      letter-spacing: 0.5px;
+    }
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="number"],
+    input[type="date"],
+    select,
+    textarea {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.6rem 0.8rem;
+      border-radius: var(--radius);
+      font-family: 'Space Mono', monospace;
+      font-size: 0.85rem;
+      transition: border-color 0.2s;
+      outline: none;
+    }
+    input:focus, select:focus, textarea:focus { border-color: var(--accent); }
+    select option { background: var(--surface2); }
+
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+    .form-group { margin-bottom: 1rem; }
+
+    /* BUTTONS */
+    .btn {
+      display: inline-block;
+      padding: 0.6rem 1.4rem;
+      border: none;
+      border-radius: var(--radius);
+      font-family: 'Space Mono', monospace;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-primary { background: var(--accent); color: #000; }
+    .btn-primary:hover { background: #00b8d4; }
+    .btn-danger { background: var(--accent2); color: #fff; }
+    .btn-danger:hover { background: #c2185b; }
+    .btn-success { background: var(--accent3); color: #000; }
+    .btn-success:hover { background: #64dd17; }
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+    }
+    .btn-outline:hover { background: var(--accent); color: #000; }
+    .btn-disabled { background: var(--border); color: var(--muted); cursor: not-allowed; }
+
+    .btn-group { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1rem; }
+
+    /* CHECKBOX / RADIO */
+    .check-group { display: flex; flex-direction: column; gap: 0.6rem; }
+    .check-item {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+    input[type="checkbox"], input[type="radio"] {
+      width: 16px; height: 16px;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+
+    /* TABLE */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+    .data-table th {
+      background: var(--surface2);
+      color: var(--accent);
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 0.8rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .data-table td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--border);
+      color: var(--text);
+    }
+    .data-table tr:hover td { background: var(--surface2); }
+    .badge {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      font-family: 'Space Mono', monospace;
+      font-weight: 700;
+    }
+    .badge-active { background: #0a3d2a; color: var(--accent3); }
+    .badge-inactive { background: #3d0a1a; color: var(--accent2); }
+    .badge-pending { background: #3d2a0a; color: #ffd740; }
+
+    /* DRAG & DROP */
+    .drag-container { display: flex; gap: 1rem; }
+    .drag-list {
+      flex: 1;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0.5rem;
+      min-height: 150px;
+    }
+    .drag-list h4 {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 0.5rem;
+      margin-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .drag-item {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0.6rem 0.8rem;
+      margin-bottom: 0.5rem;
+      cursor: grab;
+      font-size: 0.85rem;
+      transition: border-color 0.2s;
+      user-select: none;
+    }
+    .drag-item:hover { border-color: var(--accent); }
+    .drag-item.dragging { opacity: 0.5; }
+    .drag-list.drag-over { border-color: var(--accent); background: #001a1f; }
+
+    /* ALERTS */
+    .alert {
+      padding: 0.9rem 1.2rem;
+      border-radius: var(--radius);
+      font-size: 0.9rem;
+      margin-bottom: 0.75rem;
+      border-left: 3px solid;
+      font-family: 'Space Mono', monospace;
+    }
+    .alert-success { background: #0a3d2a; border-color: var(--accent3); color: var(--accent3); }
+    .alert-error { background: #3d0a1a; border-color: var(--accent2); color: var(--accent2); }
+    .alert-info { background: #001a2f; border-color: var(--accent); color: var(--accent); }
+    .alert-warning { background: #3d2a0a; border-color: #ffd740; color: #ffd740; }
+
+    /* MODAL */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.8);
+      z-index: 999;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2rem;
+      width: 90%;
+      max-width: 480px;
+    }
+    .modal h3 {
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+      color: var(--accent);
+    }
+    .modal p { color: var(--muted); font-size: 0.9rem; margin-bottom: 1.5rem; }
+    .modal-footer { display: flex; gap: 0.75rem; justify-content: flex-end; }
+
+    /* IFRAME */
+    .iframe-wrap {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    iframe { display: block; width: 100%; border: none; }
+
+    /* SLIDER */
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--accent);
+      background: transparent;
+    }
+    .range-val {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.85rem;
+      color: var(--accent);
+      margin-top: 0.5rem;
+    }
+
+    /* ACCORDION */
+    .accordion-item {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 0.5rem;
+      overflow: hidden;
+    }
+    .accordion-header {
+      background: var(--surface2);
+      padding: 0.9rem 1rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+    .accordion-header:hover { background: #1e1e30; }
+    .accordion-body {
+      display: none;
+      padding: 1rem;
+      background: var(--bg);
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+    .accordion-body.open { display: block; }
+
+    /* TOOLTIP */
+    .tooltip-wrap { position: relative; display: inline-block; }
+    .tooltip {
+      display: none;
+      position: absolute;
+      bottom: calc(100% + 8px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: 0.75rem;
+      padding: 0.4rem 0.8rem;
+      border-radius: var(--radius);
+      white-space: nowrap;
+      font-family: 'Space Mono', monospace;
+      z-index: 10;
+    }
+    .tooltip-wrap:hover .tooltip { display: block; }
+
+    /* PROGRESS */
+    .progress-bar {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      height: 10px;
+      overflow: hidden;
+      margin-bottom: 0.75rem;
+    }
+    .progress-fill {
+      height: 100%;
+      border-radius: 20px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      transition: width 0.4s;
+    }
+
+    /* LOGIN */
+    .login-wrap {
+      max-width: 380px;
+      margin: 0 auto;
+    }
+
+    /* OUTPUT */
+    #output-box {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--accent3);
+      min-height: 60px;
+      white-space: pre-wrap;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 600px) {
+      .form-row { grid-template-columns: 1fr; }
+      .drag-container { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <span class="logo">[ SELPRAC ]</span>
+  <a href="#" id="nav-home">Home</a>
+  <a href="#" id="nav-about">About</a>
+  <a href="#" id="nav-contact">Contact</a>
+  <div class="nav-right">
+    <a href="#" id="nav-login" onclick="document.getElementById('loginModal').classList.add('open')">Login</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <h1>Selenium Practice Hub</h1>
+  <p>// A full-featured playground for Java-Selenium automation testing</p>
+</div>
+
+<!-- TABS -->
+<div class="tabs" id="main-tabs">
+  <button class="tab-btn active" data-tab="forms">Forms</button>
+  <button class="tab-btn" data-tab="tables">Tables</button>
+  <button class="tab-btn" data-tab="alerts">Alerts & Popups</button>
+  <button class="tab-btn" data-tab="dragdrop">Drag & Drop</button>
+  <button class="tab-btn" data-tab="frames">iFrame</button>
+  <button class="tab-btn" data-tab="dynamic">Dynamic</button>
+  <button class="tab-btn" data-tab="widgets">Widgets</button>
+  <button class="tab-btn" data-tab="login">Login</button>
+</div>
+
+<div class="content">
+
+  <!-- FORMS -->
+  <div class="tab-panel active" id="tab-forms">
+    <div class="section">
+      <div class="section-title">Text Inputs</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="inp-name">Full Name</label>
+          <input type="text" id="inp-name" placeholder="John Doe" />
+        </div>
+        <div class="form-group">
+          <label for="inp-email">Email Address</label>
+          <input type="email" id="inp-email" placeholder="john@example.com" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="inp-password">Password</label>
+          <input type="password" id="inp-password" placeholder="••••••••" />
+        </div>
+        <div class="form-group">
+          <label for="inp-number">Phone Number</label>
+          <input type="number" id="inp-number" placeholder="+1 555 0000" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="inp-date">Date of Birth</label>
+        <input type="date" id="inp-date" />
+      </div>
+      <div class="form-group">
+        <label for="inp-textarea">Message</label>
+        <textarea id="inp-textarea" rows="3" placeholder="Type your message here..."></textarea>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Dropdowns & Select</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="sel-country">Country</label>
+          <select id="sel-country">
+            <option value="">-- Select Country --</option>
+            <option value="us">United States</option>
+            <option value="uk">United Kingdom</option>
+            <option value="in">India</option>
+            <option value="au">Australia</option>
+            <option value="ca">Canada</option>
+            <option value="de">Germany</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="sel-language">Programming Language</label>
+          <select id="sel-language">
+            <option value="">-- Select Language --</option>
+            <option value="java">Java</option>
+            <option value="python">Python</option>
+            <option value="js">JavaScript</option>
+            <option value="csharp">C#</option>
+            <option value="ruby">Ruby</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="sel-multi">Frameworks (Multi-select)</label>
+        <select id="sel-multi" multiple size="4">
+          <option value="selenium">Selenium</option>
+          <option value="cypress">Cypress</option>
+          <option value="playwright">Playwright</option>
+          <option value="testng">TestNG</option>
+          <option value="junit">JUnit</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Checkboxes & Radio Buttons</div>
+      <div class="form-row">
+        <div>
+          <label style="margin-bottom:0.8rem;">Select Skills</label>
+          <div class="check-group" id="checkboxes">
+            <label class="check-item"><input type="checkbox" id="chk-java" value="java"/> Java</label>
+            <label class="check-item"><input type="checkbox" id="chk-selenium" value="selenium" checked/> Selenium</label>
+            <label class="check-item"><input type="checkbox" id="chk-testng" value="testng"/> TestNG</label>
+            <label class="check-item"><input type="checkbox" id="chk-maven" value="maven"/> Maven</label>
+          </div>
+        </div>
+        <div>
+          <label style="margin-bottom:0.8rem;">Experience Level</label>
+          <div class="check-group" id="radiogroup">
+            <label class="check-item"><input type="radio" name="exp" id="rad-beginner" value="beginner"/> Beginner</label>
+            <label class="check-item"><input type="radio" name="exp" id="rad-intermediate" value="intermediate"/> Intermediate</label>
+            <label class="check-item"><input type="radio" name="exp" id="rad-advanced" value="advanced"/> Advanced</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">File Upload</div>
+      <div class="form-group">
+        <label for="file-upload">Upload Resume (PDF/DOC)</label>
+        <input type="file" id="file-upload" accept=".pdf,.doc,.docx" style="color: var(--muted); padding: 0.4rem 0;" />
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Submit & Output</div>
+      <div class="btn-group">
+        <button class="btn btn-primary" id="btn-submit-form" onclick="submitForm()">Submit Form</button>
+        <button class="btn btn-outline" id="btn-reset-form" onclick="resetForm()">Reset</button>
+      </div>
+      <div id="output-box">// Output will appear here after form submission</div>
+    </div>
+  </div>
+
+  <!-- TABLES -->
+  <div class="tab-panel" id="tab-tables">
+    <div class="section">
+      <div class="section-title">Data Table</div>
+      <table class="data-table" id="main-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Role</th>
+            <th>Department</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="table-body">
+          <tr>
+            <td>001</td><td>Alice Johnson</td><td>QA Engineer</td><td>Testing</td>
+            <td><span class="badge badge-active">Active</span></td>
+            <td><button class="btn btn-outline" style="padding:0.3rem 0.7rem;font-size:0.65rem;" onclick="editRow(this)">Edit</button></td>
+          </tr>
+          <tr>
+            <td>002</td><td>Bob Smith</td><td>Developer</td><td>Engineering</td>
+            <td><span class="badge badge-inactive">Inactive</span></td>
+            <td><button class="btn btn-outline" style="padding:0.3rem 0.7rem;font-size:0.65rem;" onclick="editRow(this)">Edit</button></td>
+          </tr>
+          <tr>
+            <td>003</td><td>Carol Lee</td><td>DevOps</td><td>Operations</td>
+            <td><span class="badge badge-pending">Pending</span></td>
+            <td><button class="btn btn-outline" style="padding:0.3rem 0.7rem;font-size:0.65rem;" onclick="editRow(this)">Edit</button></td>
+          </tr>
+          <tr>
+            <td>004</td><td>David Park</td><td>Scrum Master</td><td>Management</td>
+            <td><span class="badge badge-active">Active</span></td>
+            <td><button class="btn btn-outline" style="padding:0.3rem 0.7rem;font-size:0.65rem;" onclick="editRow(this)">Edit</button></td>
+          </tr>
+          <tr>
+            <td>005</td><td>Eva Brown</td><td>Designer</td><td>UX</td>
+            <td><span class="badge badge-active">Active</span></td>
+            <td><button class="btn btn-outline" style="padding:0.3rem 0.7rem;font-size:0.65rem;" onclick="editRow(this)">Edit</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="section">
+      <div class="section-title">Add Row</div>
+      <div class="form-row">
+        <input type="text" id="new-name" placeholder="Name" />
+        <input type="text" id="new-role" placeholder="Role" />
+      </div>
+      <div class="form-row">
+        <input type="text" id="new-dept" placeholder="Department" />
+        <select id="new-status">
+          <option value="active">Active</option>
+          <option value="inactive">Inactive</option>
+          <option value="pending">Pending</option>
+        </select>
+      </div>
+      <button class="btn btn-success" id="btn-add-row" onclick="addRow()">Add Row</button>
+    </div>
+  </div>
+
+  <!-- ALERTS -->
+  <div class="tab-panel" id="tab-alerts">
+    <div class="section">
+      <div class="section-title">Browser Alerts</div>
+      <div class="btn-group">
+        <button class="btn btn-primary" id="btn-alert" onclick="alert('This is a simple alert!')">Simple Alert</button>
+        <button class="btn btn-danger" id="btn-confirm" onclick="handleConfirm()">Confirm Box</button>
+        <button class="btn btn-success" id="btn-prompt" onclick="handlePrompt()">Prompt Box</button>
+      </div>
+      <div id="alert-result" class="alert alert-info" style="display:none;"></div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Inline Alerts</div>
+      <div class="alert alert-success" id="alert-success">✓ Operation completed successfully.</div>
+      <div class="alert alert-error" id="alert-error">✕ Something went wrong. Please try again.</div>
+      <div class="alert alert-info" id="alert-info">ℹ Selenium version 4.x is now available.</div>
+      <div class="alert alert-warning" id="alert-warning">⚠ Your session will expire in 5 minutes.</div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Modal Dialog</div>
+      <button class="btn btn-primary" id="btn-modal" onclick="document.getElementById('myModal').classList.add('open')">Open Modal</button>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Dynamic Alert (Delayed)</div>
+      <button class="btn btn-outline" id="btn-delayed" onclick="showDelayed()">Show Alert After 2s</button>
+      <div id="delayed-alert" style="display:none; margin-top:1rem;" class="alert alert-success">🎉 Delayed alert appeared!</div>
+    </div>
+  </div>
+
+  <!-- DRAG DROP -->
+  <div class="tab-panel" id="tab-dragdrop">
+    <div class="section">
+      <div class="section-title">Drag & Drop Items</div>
+      <div class="drag-container">
+        <div class="drag-list" id="list-a" ondragover="onDragOver(event)" ondrop="onDrop(event, 'list-a')">
+          <h4>To Do</h4>
+          <div class="drag-item" draggable="true" ondragstart="onDragStart(event)" id="di-1">Write Test Cases</div>
+          <div class="drag-item" draggable="true" ondragstart="onDragStart(event)" id="di-2">Setup Maven Project</div>
+          <div class="drag-item" draggable="true" ondragstart="onDragStart(event)" id="di-3">Configure ChromeDriver</div>
+        </div>
+        <div class="drag-list" id="list-b" ondragover="onDragOver(event)" ondrop="onDrop(event, 'list-b')">
+          <h4>In Progress</h4>
+          <div class="drag-item" draggable="true" ondragstart="onDragStart(event)" id="di-4">Page Object Model</div>
+        </div>
+        <div class="drag-list" id="list-c" ondragover="onDragOver(event)" ondrop="onDrop(event, 'list-c')">
+          <h4>Done</h4>
+          <div class="drag-item" draggable="true" ondragstart="onDragStart(event)" id="di-5">Environment Setup</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- IFRAME -->
+  <div class="tab-panel" id="tab-frames">
+    <div class="section">
+      <div class="section-title">Embedded iFrame</div>
+      <p style="color:var(--muted);font-size:0.85rem;margin-bottom:1rem;">Practice switching to an iframe context in Selenium using <code style="color:var(--accent);">driver.switchTo().frame()</code></p>
+      <div class="iframe-wrap">
+        <iframe id="practice-frame" src="about:blank" height="220" title="Practice Frame"></iframe>
+      </div>
+      <div style="margin-top:1rem;">
+        <button class="btn btn-primary" onclick="loadFrame()">Load Frame Content</button>
+        <button class="btn btn-outline" onclick="document.getElementById('practice-frame').src='about:blank'">Clear Frame</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- DYNAMIC -->
+  <div class="tab-panel" id="tab-dynamic">
+    <div class="section">
+      <div class="section-title">Dynamic Element Loading</div>
+      <button class="btn btn-primary" id="btn-load" onclick="loadDynamic()">Load Element</button>
+      <div id="dynamic-result" style="margin-top:1rem;display:none;" class="alert alert-info">
+        <span id="dynamic-text"></span>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Hidden Element (Toggle Visibility)</div>
+      <button class="btn btn-outline" id="btn-toggle" onclick="toggleHidden()">Show Hidden Element</button>
+      <div id="hidden-el" style="display:none;margin-top:1rem;" class="alert alert-success">🔍 You found the hidden element! ID: hidden-el</div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Dynamic Button State</div>
+      <button class="btn btn-primary" id="btn-enable-toggle" onclick="toggleDisabled()">Disable Button Below</button>
+      <button class="btn btn-success" id="btn-target-disable" style="margin-left:0.75rem;">Target Button (Enabled)</button>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Dynamic Text Content</div>
+      <button class="btn btn-outline" id="btn-change-text" onclick="changeText()">Change Text</button>
+      <p id="dynamic-paragraph" style="margin-top:1rem;color:var(--muted);font-size:0.9rem;">This text will change when you click the button above.</p>
+    </div>
+  </div>
+
+  <!-- WIDGETS -->
+  <div class="tab-panel" id="tab-widgets">
+    <div class="section">
+      <div class="section-title">Range Slider</div>
+      <input type="range" id="slider" min="0" max="100" value="40" oninput="document.getElementById('slider-val').textContent = this.value + '%'" />
+      <div class="range-val">Value: <span id="slider-val">40%</span></div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Progress Bars</div>
+      <label>Java Skills</label>
+      <div class="progress-bar"><div class="progress-fill" id="prog-java" style="width:80%"></div></div>
+      <label>Selenium</label>
+      <div class="progress-bar"><div class="progress-fill" id="prog-sel" style="width:65%"></div></div>
+      <label>TestNG</label>
+      <div class="progress-bar"><div class="progress-fill" id="prog-testng" style="width:50%"></div></div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Accordion</div>
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAccordion(this)">What is Selenium? <span>+</span></div>
+        <div class="accordion-body">Selenium is an open-source framework for automating web browsers. It supports multiple languages including Java, Python, C#, and JavaScript.</div>
+      </div>
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAccordion(this)">What is Page Object Model? <span>+</span></div>
+        <div class="accordion-body">POM is a design pattern that creates an object repository for web UI elements. It improves test maintenance and reduces code duplication.</div>
+      </div>
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAccordion(this)">Explicit vs Implicit Wait? <span>+</span></div>
+        <div class="accordion-body">Implicit wait applies globally for all elements. Explicit wait waits for a specific condition on a specific element using WebDriverWait.</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Tooltip Hover</div>
+      <div style="display:flex; gap:1.5rem; flex-wrap:wrap;">
+        <div class="tooltip-wrap">
+          <button class="btn btn-primary">Hover Me</button>
+          <div class="tooltip">This is a tooltip! ID: tooltip-1</div>
+        </div>
+        <div class="tooltip-wrap">
+          <button class="btn btn-outline">Another Tooltip</button>
+          <div class="tooltip">Selenium can read tooltips via getAttribute("title")</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Buttons Collection</div>
+      <div class="btn-group">
+        <button class="btn btn-primary" id="btn-primary">Primary</button>
+        <button class="btn btn-danger" id="btn-danger">Danger</button>
+        <button class="btn btn-success" id="btn-success">Success</button>
+        <button class="btn btn-outline" id="btn-outline">Outline</button>
+        <button class="btn btn-disabled" id="btn-disabled" disabled>Disabled</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOGIN -->
+  <div class="tab-panel" id="tab-login">
+    <div class="section login-wrap">
+      <div class="section-title">Login Form</div>
+      <div class="form-group">
+        <label for="login-user">Username</label>
+        <input type="text" id="login-user" placeholder="admin" />
+      </div>
+      <div class="form-group">
+        <label for="login-pass">Password</label>
+        <input type="password" id="login-pass" placeholder="password123" />
+      </div>
+      <div class="form-group">
+        <label class="check-item" style="display:flex;"><input type="checkbox" id="chk-remember" style="width:14px;height:14px;"/> &nbsp;Remember me</label>
+      </div>
+      <button class="btn btn-primary" id="btn-login" onclick="doLogin()" style="width:100%;">Login</button>
+      <div id="login-msg" style="margin-top:1rem;display:none;" class="alert"></div>
+      <p style="margin-top:1rem;font-size:0.8rem;color:var(--muted);text-align:center;font-family:'Space Mono',monospace;">
+        Hint: use <strong style="color:var(--accent);">admin</strong> / <strong style="color:var(--accent);">password123</strong>
+      </p>
+    </div>
+  </div>
+
+</div><!-- /content -->
+
+<!-- MODALS -->
+<div class="modal-overlay" id="myModal">
+  <div class="modal">
+    <h3>Confirm Action</h3>
+    <p>Are you sure you want to proceed? This action cannot be undone. Practice closing this modal with Selenium.</p>
+    <div class="modal-footer">
+      <button class="btn btn-outline" id="modal-cancel" onclick="document.getElementById('myModal').classList.remove('open')">Cancel</button>
+      <button class="btn btn-primary" id="modal-confirm" onclick="modalConfirm()">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="loginModal">
+  <div class="modal">
+    <h3>Quick Login</h3>
+    <div class="form-group" style="margin-top:1rem;">
+      <label for="modal-user">Username</label>
+      <input type="text" id="modal-user" placeholder="admin" />
+    </div>
+    <div class="form-group">
+      <label for="modal-pass">Password</label>
+      <input type="password" id="modal-pass" placeholder="password123" />
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" id="modal-close" onclick="document.getElementById('loginModal').classList.remove('open')">Cancel</button>
+      <button class="btn btn-primary" id="modal-login-btn" onclick="document.getElementById('loginModal').classList.remove('open')">Login</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // --- TABS ---
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+    });
+  });
+
+  // --- FORMS ---
+  function submitForm() {
+    const name = document.getElementById('inp-name').value;
+    const email = document.getElementById('inp-email').value;
+    const country = document.getElementById('sel-country').value;
+    const out = document.getElementById('output-box');
+    if (!name || !email) {
+      out.style.color = 'var(--accent2)';
+      out.textContent = '// ERROR: Name and Email are required!';
+      return;
+    }
+    out.style.color = 'var(--accent3)';
+    out.textContent = `// Form submitted!\n// Name: ${name}\n// Email: ${email}\n// Country: ${country || 'N/A'}`;
+  }
+  function resetForm() {
+    document.querySelectorAll('#tab-forms input, #tab-forms select, #tab-forms textarea').forEach(el => {
+      if (el.type === 'checkbox' || el.type === 'radio') el.checked = false;
+      else el.value = '';
+    });
+    document.getElementById('output-box').textContent = '// Output will appear here after form submission';
+    document.getElementById('output-box').style.color = 'var(--accent3)';
+  }
+
+  // --- TABLE ---
+  let rowId = 6;
+  function addRow() {
+    const name = document.getElementById('new-name').value;
+    const role = document.getElementById('new-role').value;
+    const dept = document.getElementById('new-dept').value;
+    const status = document.getElementById('new-status').value;
+    if (!name) return;
+    const badgeMap = { active: 'badge-active', inactive: 'badge-inactive', pending: 'badge-pending' };
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>00${rowId++}</td><td>${name}</td><td>${role}</td><td>${dept}</td>
+      <td><span class="badge ${badgeMap[status]}">${status.charAt(0).toUpperCase()+status.slice(1)}</span></td>
+      <td><button class="btn btn-outline" style="padding:0.3rem 0.7rem;font-size:0.65rem;" onclick="editRow(this)">Edit</button></td>`;
+    document.getElementById('table-body').appendChild(tr);
+    ['new-name','new-role','new-dept'].forEach(id => document.getElementById(id).value = '');
+  }
+  function editRow(btn) {
+    const row = btn.closest('tr');
+    const cells = row.querySelectorAll('td');
+    alert(`Editing: ${cells[1].textContent} - ${cells[2].textContent}`);
+  }
+
+  // --- ALERTS ---
+  function handleConfirm() {
+    const res = confirm('Do you want to proceed with the test?');
+    const el = document.getElementById('alert-result');
+    el.style.display = 'block';
+    el.textContent = res ? '✓ You clicked OK!' : '✕ You clicked Cancel!';
+  }
+  function handlePrompt() {
+    const val = prompt('Enter your automation tool name:');
+    const el = document.getElementById('alert-result');
+    el.style.display = 'block';
+    el.textContent = val ? `You entered: "${val}"` : 'No input provided.';
+  }
+  function modalConfirm() {
+    document.getElementById('myModal').classList.remove('open');
+    alert('Modal action confirmed!');
+  }
+  function showDelayed() {
+    document.getElementById('btn-delayed').disabled = true;
+    setTimeout(() => {
+      document.getElementById('delayed-alert').style.display = 'block';
+      document.getElementById('btn-delayed').disabled = false;
+    }, 2000);
+  }
+
+  // --- DRAG & DROP ---
+  let dragged = null;
+  function onDragStart(e) { dragged = e.target; e.target.classList.add('dragging'); }
+  document.addEventListener('dragend', () => {
+    if (dragged) { dragged.classList.remove('dragging'); dragged = null; }
+  });
+  function onDragOver(e) {
+    e.preventDefault();
+    document.querySelectorAll('.drag-list').forEach(l => l.classList.remove('drag-over'));
+    e.currentTarget.classList.add('drag-over');
+  }
+  function onDrop(e, listId) {
+    e.preventDefault();
+    document.querySelectorAll('.drag-list').forEach(l => l.classList.remove('drag-over'));
+    if (dragged) e.currentTarget.appendChild(dragged);
+  }
+
+  // --- IFRAME ---
+  function loadFrame() {
+    const frame = document.getElementById('practice-frame');
+    const doc = frame.contentDocument || frame.contentWindow.document;
+    doc.open();
+    doc.write(`<!DOCTYPE html><html><head><style>
+      body{background:#0a0a0f;color:#e8e8f0;font-family:monospace;padding:1.5rem;margin:0;}
+      h2{color:#00e5ff;font-size:1rem;margin-bottom:0.5rem;}
+      p{color:#6b6b8a;font-size:0.85rem;}
+      input{background:#12121a;border:1px solid #2a2a3e;color:#e8e8f0;padding:0.5rem;border-radius:4px;width:100%;margin-top:0.5rem;}
+      button{background:#00e5ff;color:#000;border:none;padding:0.5rem 1rem;border-radius:4px;cursor:pointer;margin-top:0.5rem;font-family:monospace;font-weight:700;}
+    </style></head><body>
+      <h2>// iFrame Content</h2>
+      <p>You are inside an iframe. Switch to this context using driver.switchTo().frame("practice-frame")</p>
+      <input type="text" id="frame-input" placeholder="Type something inside the frame..." />
+      <button onclick="document.getElementById('frame-input').value='Selenium was here!'">Click Me</button>
+    </body></html>`);
+    doc.close();
+  }
+
+  // --- DYNAMIC ---
+  const dynamicTexts = ['Element loaded successfully!', 'Dynamic content ready.', 'Data fetched from server.'];
+  let dtIdx = 0;
+  function loadDynamic() {
+    const btn = document.getElementById('btn-load');
+    btn.disabled = true;
+    btn.textContent = 'Loading...';
+    setTimeout(() => {
+      const el = document.getElementById('dynamic-result');
+      el.style.display = 'block';
+      document.getElementById('dynamic-text').textContent = dynamicTexts[dtIdx++ % dynamicTexts.length];
+      btn.disabled = false;
+      btn.textContent = 'Load Element';
+    }, 1500);
+  }
+  function toggleHidden() {
+    const el = document.getElementById('hidden-el');
+    const btn = document.getElementById('btn-toggle');
+    const visible = el.style.display !== 'none';
+    el.style.display = visible ? 'none' : 'block';
+    btn.textContent = visible ? 'Show Hidden Element' : 'Hide Element';
+  }
+  function toggleDisabled() {
+    const target = document.getElementById('btn-target-disable');
+    const btn = document.getElementById('btn-enable-toggle');
+    if (target.disabled) {
+      target.disabled = false; target.textContent = 'Target Button (Enabled)';
+      btn.textContent = 'Disable Button Below';
+    } else {
+      target.disabled = true; target.textContent = 'Target Button (Disabled)';
+      btn.textContent = 'Enable Button Below';
+    }
+  }
+  const texts = [
+    'Text has been changed by JavaScript!',
+    'Changed again! Selenium can detect this.',
+    'This is dynamic text content.',
+    'This text will change when you click the button above.'
+  ];
+  let tIdx = 0;
+  function changeText() {
+    tIdx = (tIdx + 1) % texts.length;
+    document.getElementById('dynamic-paragraph').textContent = texts[tIdx];
+  }
+
+  // --- ACCORDION ---
+  function toggleAccordion(header) {
+    const body = header.nextElementSibling;
+    const span = header.querySelector('span');
+    const isOpen = body.classList.contains('open');
+    document.querySelectorAll('.accordion-body').forEach(b => { b.classList.remove('open'); });
+    document.querySelectorAll('.accordion-header span').forEach(s => s.textContent = '+');
+    if (!isOpen) { body.classList.add('open'); span.textContent = '−'; }
+  }
+
+  // --- LOGIN ---
+  function doLogin() {
+    const user = document.getElementById('login-user').value;
+    const pass = document.getElementById('login-pass').value;
+    const msg = document.getElementById('login-msg');
+    msg.style.display = 'block';
+    if (user === 'admin' && pass === 'password123') {
+      msg.className = 'alert alert-success';
+      msg.textContent = '✓ Login successful! Welcome, admin.';
+    } else {
+      msg.className = 'alert alert-error';
+      msg.textContent = '✕ Invalid credentials. Try admin / password123';
+    }
+  }
+</script>
+</body>
+</html>
